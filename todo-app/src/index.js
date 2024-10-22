@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import TodoList from './compontents/todolist/todolist';
+import MainComponent from './compontents/mainComponent';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <TodoList />
+    <MainComponent />
   </React.StrictMode>
 );
 

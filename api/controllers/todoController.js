@@ -1,12 +1,13 @@
-const { getAllTodosModel,
+const { getAllTodosByIdModel,
     addTodoModel,
     toggleTodoModel,
     removeTodoModel,
     updateTodoModel} = require('../models/todoModel');
 
-async function getTodosController(req, res){
+async function getTodosByIdController(req, res){
     try{
-        const todos = await getAllTodosModel();
+        const userId = req.params.userId;
+        const todos = await getAllTodosByIdModel(userId);
         if(todos){
         res.json(todos)
     }else{
@@ -20,7 +21,9 @@ async function getTodosController(req, res){
 async function addTodoController(req, res){
     try{
         const newTodo = req.body.title;
-        const addedTodo = await addTodoModel(newTodo);
+        const userId = req.params.userId;
+
+        const addedTodo = await addTodoModel(newTodo, userId);
         res.status(201).json(addedTodo);
     }catch(error){
         res.status(500).json({message: 'Error adding todo', error});
@@ -31,7 +34,8 @@ async function toggleTodoController(req, res) {
     console.log("Toggle Controller Called, P:", req.params.id);
     try {
         const id = req.params.id;  
-        const updatedTodo = await toggleTodoModel(id);
+        const userId = req.params.userId;
+        const updatedTodo = await toggleTodoModel(id, userId);
 
         if (updatedTodo) {
             console.log("Returning to frontend");
@@ -47,8 +51,9 @@ async function toggleTodoController(req, res) {
 
 async function removeTodoController(req, res){
     try{
-        const id = req.params;
-        const removedTodo = await removeTodoModel(id);
+        const id = req.params.id;
+        const userId = req.params.userId;
+        const removedTodo = await removeTodoModel(id, userId);
         if(removedTodo){
             res.json({message: 'Todo removed', removedTodo});
         }else{
@@ -64,10 +69,12 @@ async function updateTodoController(req,res){
     try{
         console.log("Controller P:",req.params, " B:", req.body);
 
-        const id = req.params;
+        const id = req.params.id;
+        const userId = req.params.userId;
+
         const updateFields = req.body.title;
 
-        const updateTodo =  await updateTodoModel(id, updateFields);
+        const updateTodo =  await updateTodoModel(id, updateFields, userId);
         if(updateTodo.length){
             res.status(200).json(updateTodo[0]);
         }else{
@@ -79,7 +86,7 @@ async function updateTodoController(req,res){
 }
 
 module.exports = {
-    getTodosController,
+    getTodosByIdController,
     addTodoController,
     toggleTodoController,
     removeTodoController,

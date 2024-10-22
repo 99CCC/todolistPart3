@@ -19,7 +19,9 @@ let dbServiceInstancePromise = initializeDbService().then(instance => {
 
 //Import & Use Routes
 const todoRoutes = require('./routes/todoRoutes');
+const userRoutes = require('./routes/userRoutes');
 app.use('/api/todos', todoRoutes);
+app.use('/api/user', userRoutes);
 
 app.listen(port, () => {
     console.log("Server is running on http://localhost:"+port.toString());

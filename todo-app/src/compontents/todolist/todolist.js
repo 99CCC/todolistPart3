@@ -5,7 +5,7 @@ import "./todolist.css"
 import { fetchTodosFromAPI, addTodoAPI, toggleTodoAPI, removeTodoFromAPI, updateTodoFromAPI } from "./apiHelper";
 
 
-function TodoList(){
+function TodoList({userId}){
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
 const [editingTodolist_id, setEditingTodolist_id] = useState(null);
@@ -13,19 +13,20 @@ const [editTitle, setEditTitle] = useState("");
 
 
 async function loadTodos(){
-    const todosFromAPI = await fetchTodosFromAPI();
+    const todosFromAPI = await fetchTodosFromAPI(userId);
     setTodos(todosFromAPI);
 }
 
+//might cause problem
 useEffect(() => {
-    loadTodos();
+    loadTodos(userId);
 }, []);
 
 async function handleAddTodo(){
     if(newTodo.trim() === "") return;
     const newTodoItem = {title: newTodo, completed: false};
     console.log("NewTodoItem:", newTodoItem);
-    const addedTodo = await addTodoAPI(newTodoItem);
+    const addedTodo = await addTodoAPI(newTodoItem, userId);
     if (addedTodo){
         setTodos([...todos, addedTodo]);
         setNewTodo("");
@@ -34,7 +35,7 @@ async function handleAddTodo(){
 
 async function handleToggleTodo(todolist_id) {
     console.log("handletoggle called");
-    const updatedTodos = await toggleTodoAPI(todolist_id);
+    const updatedTodos = await toggleTodoAPI(todolist_id, userId);
     if (updatedTodos && updatedTodos.length > 0) {
         const updatedTodo = updatedTodos[0];
         setTodos(todos.map((t) => (t.todolist_id === updatedTodo.todolist_id ? updatedTodo : t)));
@@ -43,7 +44,7 @@ async function handleToggleTodo(todolist_id) {
 
 
 async function handleRemoveTodo(todolist_id){
-    const isRemoved = await removeTodoFromAPI(todolist_id);
+    const isRemoved = await removeTodoFromAPI(todolist_id, userId);
     if(isRemoved){
         setTodos(todos.filter((t) => t.todolist_id !== todolist_id));
     }
@@ -55,7 +56,7 @@ async function handleEdit(todo){
 }
 
 async function handleConfirmUpdate(todolist_id) {
-    const updatedTodo = await updateTodoFromAPI(todolist_id, editTitle);
+    const updatedTodo = await updateTodoFromAPI(todolist_id, editTitle, userId);
     if (updatedTodo) {
         setEditingTodolist_id(null);
         setTodos(todos.map((t) =>

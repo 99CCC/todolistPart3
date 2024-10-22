@@ -1,9 +1,9 @@
 const baseurl = "http://localhost:3001/api/todos";
 
 //Get All
-export async function fetchTodosFromAPI(){
+export async function fetchTodosFromAPI(userId){
     try{
-        const response = await fetch(baseurl);
+        const response = await fetch(baseurl+"/"+userId);
         if(response.ok){
             return response.json();
         }else{
@@ -15,10 +15,10 @@ export async function fetchTodosFromAPI(){
     }
 }
 
-export async function addTodoAPI(todo){
+export async function addTodoAPI(todo, userId){
     try{
         console.log("From helper:",todo)
-        const response = await fetch(baseurl, {
+        const response = await fetch(baseurl+"/"+userId, {
             method: "POST",
             headers: { "Content-type": "application/json"},
             body: JSON.stringify(todo),
@@ -33,10 +33,10 @@ export async function addTodoAPI(todo){
     }
 }
 
-export async function toggleTodoAPI(todoId){
+export async function toggleTodoAPI(todoId, userId){
     try{
         console.log("ID toggle: ",todoId);
-        const response = await fetch((baseurl+"/"+todoId), {
+        const response = await fetch((baseurl+"/"+todoId+"/"+userId), {
             method: "PUT",
             headers: { "Content-type": "application/json"}
         });
@@ -51,9 +51,9 @@ export async function toggleTodoAPI(todoId){
     }
 }
 
-export async function removeTodoFromAPI(todoId){
+export async function removeTodoFromAPI(todoId, userId){
     try{
-        const response = await fetch(baseurl+"/"+todoId, {
+        const response = await fetch(baseurl+"/"+todoId+"/"+userId, {
             method: "DELETE",
         });
         if (response.ok){
@@ -67,10 +67,10 @@ export async function removeTodoFromAPI(todoId){
     }
 }
 
-export async function updateTodoFromAPI(todoId, updateField){
+export async function updateTodoFromAPI(todoId, updateField, userId){
     try{
         console.log(todoId);
-        const response = await fetch(baseurl+"/"+"updateTitle/"+todoId, {
+        const response = await fetch(baseurl+"/"+"updateTitle/"+todoId+"/"+userId, {
             method: "PUT",
             headers:{
                 "Content-Type": "application/json"
